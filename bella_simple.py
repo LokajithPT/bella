@@ -19,25 +19,35 @@ except:
 def ask_deepseek_free(prompt):
     """Completely free DeepSeek Coder API"""
     try:
-        # Using your DeepSeek key
-        response = requests.post(
-            "https://api.deepseek.com/chat/completions",
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {DEEPSEEK_KEY}",
-            },
-            json={
-                "model": "deepseek-coder",
-                "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.7,
-            },
-            timeout=30,
-        )
+        # Check if we have a valid key
+        if DEEPSEEK_KEY.startswith("sk-"):
+            response = requests.post(
+                "https://api.deepseek.com/chat/completions",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {DEEPSEEK_KEY}",
+                },
+                json={
+                    "model": "deepseek-coder",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.7,
+                    "max_tokens": 4000,
+                },
+                timeout=30,
+            )
 
-        if response.status_code == 200:
-            return response.json()["choices"][0]["message"]["content"]
+            if response.status_code == 200:
+                return response.json()["choices"][0]["message"]["content"]
+            elif response.status_code == 401:
+                return "DeepSeek: Invalid API key. Check your key."
+            elif response.status_code == 402:
+                return "DeepSeek: API rate limit or billing issue. Try later."
+            else:
+                return f"DeepSeek API error: HTTP {response.status_code}"
         else:
-            return f"DeepSeek API error: {response.status_code}"
+            return (
+                "DeepSeek: No valid API key. Run in DeepSeek mode and enter your key."
+            )
 
     except Exception as e:
         return f"DeepSeek connection error: {str(e)}"
