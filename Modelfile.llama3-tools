@@ -1,0 +1,131 @@
+FROM llama3
+
+# Define all the tools for the model to use
+
+# read_file_tool
+FUNCTIONS """
+{
+    "name": "read_file_tool",
+    "description": "Reads the content of a specified file.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "file_path": {"type": "string"}
+        },
+        "required": ["file_path"]
+    }
+}
+"""
+
+# write_file_tool
+FUNCTIONS """
+{
+    "name": "write_file_tool",
+    "description": "Writes content to a specified file.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "file_path": {"type": "string", "description": "The path to the file to write."},
+            "content": {"type": "string", "description": "The content to write to the file."}
+        },
+        "required": ["file_path", "content"]
+    }
+}
+"""
+
+# web_fetch_tool
+FUNCTIONS """
+{
+    "name": "web_fetch_tool",
+    "description": "Fetches the content of a given URL.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "url": {"type": "string", "description": "The URL to fetch."}
+        },
+        "required": ["url"]
+    }
+}
+"""
+
+# web_search_tool
+FUNCTIONS """
+{
+    "name": "web_search_tool",
+    "description": "Performs a web search using a basic search engine endpoint and returns relevant snippets. Note: For more structured and reliable results, integrate with a dedicated search API (e.g., Google Custom Search API).",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "query": {"type": "string", "description": "The search query."},
+            "url": {"type": "string", "description": "Optional: A URL to consider for search context or a specific search within that domain."}
+        },
+        "required": ["query"]
+    }
+}
+"""
+
+# list_directory_tool
+FUNCTIONS """
+{
+    "name": "list_directory_tool",
+    "description": "Lists the names of files and subdirectories directly within a specified directory path. Defaults to current directory if not specified.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "dir_path": {"type": "string", "description": "The path to the directory to list."}
+        },
+        "required": []
+    }
+}
+"""
+
+# glob_tool
+FUNCTIONS """
+{
+    "name": "glob_tool",
+    "description": "Finds files matching a glob pattern within a specified directory. Defaults to current directory ('.') if dir_path is not specified.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "pattern": {"type": "string", "description": "The glob pattern to match against (e.g., '*.py', 'src/**/*.txt')."},
+            "dir_path": {"type": "string", "description": "The path to the directory to search within."}
+        },
+        "required": ["pattern"]
+    }
+}
+"""
+
+# search_file_content_tool
+FUNCTIONS """
+{
+    "name": "search_file_content_tool",
+    "description": "Searches for a pattern (case-sensitive) within the content of a specified file.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "pattern": {"type": "string", "description": "The pattern to search for."},
+            "file_path": {"type": "string", "description": "The path to the file to search within."}
+        },
+        "required": ["pattern", "file_path"]
+    }
+}
+"""
+
+# run_shell_command_tool
+FUNCTIONS """
+{
+    "name": "run_shell_command_tool",
+    "description": "Executes a shell command and returns its stdout and stderr. Use with caution for commands that modify the system.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "command": {
+                "type": ["string", "array"],
+                "items": {"type": "string"},
+                "description": "The exact shell command to execute as a single string (e.g., 'ls -l') or as an array of strings (e.g., ['ls', '-l'])."
+            }
+        },
+        "required": ["command"]
+    }
+}
+"""
