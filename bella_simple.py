@@ -105,27 +105,19 @@ def switch_mode():
                     print("✅ Key saved to .deepseek-key")
                 except:
                     pass
-                print("\n🔧 SWITCHED TO DEEPSEEK MODE")
-                print("🟢 Status: Cloud AI processing")
+                print("✅ Switched to DeepSeek mode")
+                print("\n🟢 Status: Cloud AI processing")
                 print("🌐 Network: Internet-connected responses")
                 print("⚡ Speed: Fast cloud API responses")
                 print("💎 Quality: Code-specialized model")
                 print("💰 Cost: Free tier with good limits")
                 print("🔑 Key:", DEEPSEEK_KEY[:20] + "..." + DEEPSEEK_KEY[-4:])
                 print("\n✨ Ready to assist with DeepSeek Coder!")
+                input("Press Enter to start chatting...")
             else:
                 print("❌ Invalid key format")
         else:
-            print("\n🔧 SWITCHED TO DEEPSEEK MODE")
-            print("🟢 Status: Cloud AI processing")
-            print("🌐 Network: Internet-connected responses")
-            print("⚡ Speed: Fast cloud API responses")
-            print("💎 Quality: Code-specialized model")
-            print("💰 Cost: Free tier with good limits")
-            print("🔑 Key:", DEEPSEEK_KEY[:20] + "..." + DEEPSEEK_KEY[-4:])
-            print("\n✨ Ready to assist with DeepSeek Coder!")
-    else:
-        print("❌ Invalid choice")
+            print("✅ Switched to DeepSeek mode")
 
 
 def ask_ai(prompt):
@@ -139,6 +131,9 @@ def ask_ai(prompt):
 def simple_tui():
     """Main TUI loop"""
     messages = []
+
+    # Show startup message briefly
+    time.sleep(2)
 
     while True:
         print("\n╔═════════════════════════════════════════════════╗")
