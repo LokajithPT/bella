@@ -113,11 +113,12 @@ def switch_mode():
                 print("💰 Cost: Free tier with good limits")
                 print("🔑 Key:", DEEPSEEK_KEY[:20] + "..." + DEEPSEEK_KEY[-4:])
                 print("\n✨ Ready to assist with DeepSeek Coder!")
+                time.sleep(1)  # Brief pause
                 input("Press Enter to start chatting...")
             else:
-                print("❌ Invalid key format")
-        else:
-            print("✅ Switched to DeepSeek mode")
+                print("✅ Switched to DeepSeek mode")
+                time.sleep(1)  # Brief pause
+                print("\nReady to chat! Type your message below...")
 
 
 def ask_ai(prompt):
