@@ -7,6 +7,14 @@ import os
 AI_MODE = "ollama"  # Default mode: "ollama" or "deepseek"
 DEEPSEEK_KEY = os.getenv("DEEPSEEK_KEY", "YOUR_DEEPSEEK_KEY")
 
+# Load saved key if exists
+try:
+    if os.path.exists(".deepseek_key"):
+        with open(".deepseek_key", "r") as f:
+            DEEPSEEK_KEY = f.read().strip()
+except:
+    pass
+
 
 def ask_deepseek_free(prompt):
     """Completely free DeepSeek Coder API"""
@@ -68,9 +76,19 @@ def switch_mode():
         if DEEPSEEK_KEY == "YOUR_DEEPSEEK_KEY":
             new_key = input("Enter DeepSeek API key: ").strip()
             if new_key:
+                # Save key to environment and file
                 DEEPSEEK_KEY = new_key
                 os.environ["DEEPSEEK_KEY"] = new_key
                 AI_MODE = "deepseek"
+
+                # Save key to file for persistence
+                try:
+                    with open(".deepseek_key", "w") as f:
+                        f.write(new_key)
+                    print("✅ Key saved for future sessions")
+                except:
+                    pass  # Silent fail if can't save
+
                 print("✅ Switched to DeepSeek mode")
             else:
                 print("❌ Invalid key, staying in current mode")
