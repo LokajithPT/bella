@@ -147,6 +147,7 @@ def simple_tui():
                 print(f"│ You: {msg['content']:<50} │")
             else:
                 print(f"│ Bella: {msg['content']:<47} │")
+                print("─" * 40)
         print("╰──────────────────────────────────────────────────────────────╯")
 
         if not messages:
@@ -182,6 +183,7 @@ def simple_tui():
                 elif line.strip() == "mode":
                     switch_mode()
                     lines = []
+                    print("\nNow type your message:")
                     continue
                 else:
                     lines.append(line)
