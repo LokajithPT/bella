@@ -5,13 +5,29 @@ import os
 
 # Configuration
 AI_MODE = "ollama"  # Default mode
-DEEPSEEK_KEY = os.getenv("DEEPSEEK_KEY", "YOUR_DEEPSEEK_KEY")
+DEEPSEEK_KEY = "YOUR_DEEPSEEK_KEY"  # Will be loaded properly
+
+
+def load_deepseek_key():
+    """Load DeepSeek key from file"""
+    global DEEPSEEK_KEY
+    try:
+        if os.path.exists(".deepseek-key"):
+            with open(".deepseek-key", "r") as f:
+                loaded_key = f.read().strip()
+                if loaded_key.startswith("sk-"):
+                    DEEPSEEK_KEY = loaded_key
+    except:
+        pass
+
 
 # Load saved key if exists
 try:
     if os.path.exists(".deepseek-key"):
         with open(".deepseek-key", "r") as f:
-            DEEPSEEK_KEY = f.read().strip()
+            loaded_key = f.read().strip()
+            if loaded_key.startswith("sk-"):
+                DEEPSEEK_KEY = loaded_key
 except:
     pass
 
@@ -58,7 +74,7 @@ def ask_ollama_fallback(prompt):
 
 def switch_mode():
     """Switch AI mode"""
-    global AI_MODE
+    global AI_MODE, DEEPSEEK_KEY
 
     print("\n🔧 AI MODE SELECTION")
     print("1. Ollama (Local)")
@@ -71,7 +87,7 @@ def switch_mode():
         print("✅ Switched to Ollama mode")
     elif choice == "2":
         AI_MODE = "deepseek"
-        if DEEPSEEK_KEY.startswith("YOUR_"):
+        if not DEEPSEEK_KEY.startswith("sk-"):
             new_key = input("Enter DeepSeek API key: ").strip()
             if new_key and new_key.startswith("sk-"):
                 DEEPSEEK_KEY = new_key
