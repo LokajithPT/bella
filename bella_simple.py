@@ -1,17 +1,22 @@
 import time
 import sys
 import requests
+import os
+
+# Configuration for different modes
+AI_MODE = "ollama"  # Default mode: "ollama" or "deepseek"
+DEEPSEEK_KEY = os.getenv("DEEPSEEK_KEY", "YOUR_DEEPSEEK_KEY")
 
 
 def ask_deepseek_free(prompt):
     """Completely free DeepSeek Coder API"""
     try:
-        # You can get a free API key from deepseek.com
+        # Using your DeepSeek key
         response = requests.post(
             "https://api.deepseek.com/chat/completions",
             headers={
                 "Content-Type": "application/json",
-                "Authorization": "Bearer YOUR_DEEPSEEK_KEY",  # Replace with your free key
+                "Authorization": f"Bearer {DEEPSEEK_KEY}",
             },
             json={
                 "model": "deepseek-coder",
@@ -28,6 +33,54 @@ def ask_deepseek_free(prompt):
 
     except Exception as e:
         return f"DeepSeek connection error: {str(e)}"
+
+
+def ask_ai_mode(prompt, mode):
+    """Route to appropriate AI based on mode"""
+    if mode == "deepseek":
+        return ask_deepseek_free(prompt)
+    else:  # Default to ollama
+        try:
+            import sys
+
+            sys.path.append(os.path.dirname(__file__))
+            from chatter import ask_ollama
+
+            return ask_ollama(prompt)
+        except Exception as e:
+            return f"Ollama error: {str(e)}"
+
+
+def switch_mode():
+    """Switch between AI modes"""
+    global AI_MODE, DEEPSEEK_KEY
+
+    print("\n🔧 AI MODE SELECTION")
+    print("1. Ollama (Local)")
+    print("2. DeepSeek Coder (Free Cloud)")
+
+    choice = input("Select mode (1-2): ").strip()
+
+    if choice == "1":
+        AI_MODE = "ollama"
+        print("✅ Switched to Ollama mode")
+    elif choice == "2":
+        if DEEPSEEK_KEY == "YOUR_DEEPSEEK_KEY":
+            new_key = input("Enter DeepSeek API key: ").strip()
+            if new_key:
+                DEEPSEEK_KEY = new_key
+                os.environ["DEEPSEEK_KEY"] = new_key
+                AI_MODE = "deepseek"
+                print("✅ Switched to DeepSeek mode")
+            else:
+                print("❌ Invalid key, staying in current mode")
+        else:
+            AI_MODE = "deepseek"
+            print("✅ Switched to DeepSeek mode")
+    else:
+        print("❌ Invalid choice")
+
+    input("Press Enter to continue...")
 
 
 def simple_tui():
@@ -55,7 +108,8 @@ def simple_tui():
 
             if not messages:
                 print("💬 Ready to chat!")
-                print("  Enter = Send | help | clear | quit")
+                print(f"  Current mode: {AI_MODE.upper()}")
+                print("  Enter = Send | mode = Switch | help | clear | quit")
 
             print()
 
@@ -69,9 +123,14 @@ def simple_tui():
                     if line.strip() == ";;":
                         # Send with ;; (semicolon semicolon)
                         break
+                    elif line.strip() == "mode":
+                        switch_mode()
+                        lines = []  # Reset input
+                        continue
                     elif line.strip() == "help":
                         print("Commands:")
                         print("  ;; - Send message")
+                        print("  mode - Switch AI provider")
                         print("  help - Show commands")
                         print("  clear - Clear chat")
                         print("  quit - Exit")
@@ -104,21 +163,9 @@ def simple_tui():
             print("🔸 Bella is thinking...")
             time.sleep(1)
 
-            # Free AI integration
+            # AI integration based on mode
             try:
-                import os
-
-                sys.path.append(os.path.dirname(__file__))
-
-                # Try DeepSeek first (completely free)
-                response = ask_deepseek_free(user_input)
-
-                # Fallback to local Ollama if API fails
-                if "Error" in response or "error" in response.lower():
-                    from chatter import ask_ollama
-
-                    response = ask_ollama(user_input)
-
+                response = ask_ai_mode(user_input, AI_MODE)
             except Exception as e:
                 response = f"Error: {str(e)}"
 
