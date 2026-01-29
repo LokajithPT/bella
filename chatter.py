@@ -68,6 +68,9 @@ system_prompt_content = (
     '- If using JSON blocks, format: `{"function": {"name": "tool_name", "arguments": {...}}}`\n'
     "- Never explain tool usage, just execute\n"
     "- Provide real values, no placeholders\n\n"
+    "Shell Commands:\n"
+    "- Use `&&` to chain commands: `cd folder && npm init -y`\n"
+    "- For multiple steps, combine with `&&` not separate arguments\n\n"
     "Available tools: read_file_tool, write_file_tool, web_fetch_tool, web_search_tool, "
     "list_directory_tool, glob_tool, search_file_content_tool, run_shell_command_tool\n\n"
     "Respond directly and efficiently to user requests."
