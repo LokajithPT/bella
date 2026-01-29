@@ -84,7 +84,14 @@ def switch_mode():
 
     if choice == "1":
         AI_MODE = "ollama"
-        print("✅ Switched to Ollama mode")
+        print("\n🔧 SWITCHED TO OLLAMA MODE")
+        print("🟢 Status: Local AI processing")
+        print("🔒 Privacy: All requests stay on your device")
+        print("⚡ Speed: Instant response, no API delays")
+        print("📁 Model: Your local Ollama models")
+        print("💾 Cost: 100% FREE")
+        print("\n✨ Ready to assist with local power!")
+
     elif choice == "2":
         AI_MODE = "deepseek"
         if not DEEPSEEK_KEY.startswith("sk-"):
@@ -98,11 +105,25 @@ def switch_mode():
                     print("✅ Key saved to .deepseek-key")
                 except:
                     pass
-                print("✅ Switched to DeepSeek mode")
+                print("\n🔧 SWITCHED TO DEEPSEEK MODE")
+                print("🟢 Status: Cloud AI processing")
+                print("🌐 Network: Internet-connected responses")
+                print("⚡ Speed: Fast cloud API responses")
+                print("💎 Quality: Code-specialized model")
+                print("💰 Cost: Free tier with good limits")
+                print("🔑 Key:", DEEPSEEK_KEY[:20] + "..." + DEEPSEEK_KEY[-4:])
+                print("\n✨ Ready to assist with DeepSeek Coder!")
             else:
                 print("❌ Invalid key format")
         else:
-            print("✅ Switched to DeepSeek mode")
+            print("\n🔧 SWITCHED TO DEEPSEEK MODE")
+            print("🟢 Status: Cloud AI processing")
+            print("🌐 Network: Internet-connected responses")
+            print("⚡ Speed: Fast cloud API responses")
+            print("💎 Quality: Code-specialized model")
+            print("💰 Cost: Free tier with good limits")
+            print("🔑 Key:", DEEPSEEK_KEY[:20] + "..." + DEEPSEEK_KEY[-4:])
+            print("\n✨ Ready to assist with DeepSeek Coder!")
     else:
         print("❌ Invalid choice")
 
