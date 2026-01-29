@@ -1,5 +1,33 @@
 import time
 import sys
+import requests
+
+
+def ask_deepseek_free(prompt):
+    """Completely free DeepSeek Coder API"""
+    try:
+        # You can get a free API key from deepseek.com
+        response = requests.post(
+            "https://api.deepseek.com/chat/completions",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer YOUR_DEEPSEEK_KEY",  # Replace with your free key
+            },
+            json={
+                "model": "deepseek-coder",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.7,
+            },
+            timeout=30,
+        )
+
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        else:
+            return f"DeepSeek API error: {response.status_code}"
+
+    except Exception as e:
+        return f"DeepSeek connection error: {str(e)}"
 
 
 def simple_tui():
@@ -76,14 +104,21 @@ def simple_tui():
             print("🔸 Bella is thinking...")
             time.sleep(1)
 
-            # Real AI integration
+            # Free AI integration
             try:
                 import os
 
                 sys.path.append(os.path.dirname(__file__))
-                from chatter import ask_ollama
 
-                response = ask_ollama(user_input)
+                # Try DeepSeek first (completely free)
+                response = ask_deepseek_free(user_input)
+
+                # Fallback to local Ollama if API fails
+                if "Error" in response or "error" in response.lower():
+                    from chatter import ask_ollama
+
+                    response = ask_ollama(user_input)
+
             except Exception as e:
                 response = f"Error: {str(e)}"
 
